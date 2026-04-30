@@ -15,24 +15,24 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @NotBlank(message = "USERNAME_REQUIRED")
+    @Size(min = 3, max = 50, message = "USERNAME_INVALID")
     @Pattern(
             regexp = "^[a-zA-Z0-9._-]+$",
-            message = "Username may only contain letters, numbers, dot, underscore, and hyphen"
+            message = "USERNAME_INVALID"
     )
     String username;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
-    @Size(max = 100, message = "Email must not exceed 100 characters")
+    @NotBlank(message = "BLANK_EMAIL")
+    @Email(message = "INVALID_EMAIL")
+    @Size(max = 100, message = "INVALID_EMAIL")
     String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 72, message = "Password must be between 8 and 72 characters")
+    @NotBlank(message = "PASSWORD_REQUIRED")
+    @Size(min = 8, max = 72, message = "INVALID_PASSWORD")
     String password;
 
-    @NotNull(message = "Role is required")
+    @NotNull(message = "ROLE_REQUIRED")
     Role role;
 
     @Builder.Default

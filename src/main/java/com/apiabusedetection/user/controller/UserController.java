@@ -2,6 +2,7 @@ package com.apiabusedetection.user.controller;
 
 import com.apiabusedetection.user.dto.request.UserCreationRequest;
 import com.apiabusedetection.user.dto.request.UserUpdateRequest;
+import com.apiabusedetection.user.dto.response.ApiResponse;
 import com.apiabusedetection.user.entity.User;
 import com.apiabusedetection.user.service.UserService;
 import jakarta.validation.Valid;
@@ -17,8 +18,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    User createUser(@RequestBody @Valid UserCreationRequest request) {
-        return userService.createUser(request);
+    ApiResponse createUser(@RequestBody @Valid UserCreationRequest request) {
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.createUser(request));
+        return apiResponse;
     }
 
     @GetMapping

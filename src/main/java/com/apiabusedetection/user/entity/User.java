@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,10 +29,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      Long id;
     @Column(nullable = false, unique = true, length = 50)
+            @Size(min = 3, max = 50, message = "USERNAME_INVALID")
      String username;
     @Column(nullable = false, unique = true, length = 100)
     String email;
     @Column(name = "password_hash", nullable = false, length = 255)
+            @Size(min = 8, message = "INVALID_PASSWORD")
     String passwordHash;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

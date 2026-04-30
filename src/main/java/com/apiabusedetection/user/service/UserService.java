@@ -1,6 +1,8 @@
 package com.apiabusedetection.user.service;
 
 
+import com.apiabusedetection.exception.AppException;
+import com.apiabusedetection.exception.ErrorCode;
 import com.apiabusedetection.user.dto.request.UserCreationRequest;
 import com.apiabusedetection.user.dto.request.UserUpdateRequest;
 import com.apiabusedetection.user.entity.User;
@@ -19,7 +21,7 @@ public class UserService {
         User user = new User();
 
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username is already in use");
+            throw new AppException(ErrorCode.USER_EXISTS);
         }
 
         user.setUsername(request.getUsername());
@@ -36,7 +38,7 @@ public class UserService {
     }
     public User getUser(Long id){
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
     public User updateUser(Long id,UserUpdateRequest request) {
         User user = getUser(id);
@@ -44,7 +46,6 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPasswordHash(request.getPassword());
-        user.setRole(request.getRole());
         user.setEnabled(request.isEnabled());
 
         return userRepository.save(user);
