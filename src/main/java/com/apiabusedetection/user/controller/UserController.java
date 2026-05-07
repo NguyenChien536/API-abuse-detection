@@ -1,21 +1,25 @@
 package com.apiabusedetection.user.controller;
 
+import com.apiabusedetection.common.response.ApiResponse;
 import com.apiabusedetection.user.dto.request.UserCreationRequest;
 import com.apiabusedetection.user.dto.request.UserUpdateRequest;
-import com.apiabusedetection.user.dto.response.ApiResponse;
+import com.apiabusedetection.user.dto.response.UserResponse;
 import com.apiabusedetection.user.entity.User;
 import com.apiabusedetection.user.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
     ApiResponse createUser(@RequestBody @Valid UserCreationRequest request) {
@@ -31,12 +35,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    User getUser(@PathVariable Long userId){
+    UserResponse getUser(@PathVariable Long userId){
         return userService.getUser(userId);
     }
 
     @PutMapping("/{userId}")
-    User updateUser(@PathVariable Long userId, @RequestBody @Valid UserUpdateRequest request){
+    UserResponse updateUser(@PathVariable Long userId, @RequestBody @Valid UserUpdateRequest request){
         return userService.updateUser(userId, request);
     }
 

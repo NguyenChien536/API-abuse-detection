@@ -1,4 +1,4 @@
-package com.apiabusedetection.exception;
+package com.apiabusedetection.common.exception;
 
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error"),

@@ -1,5 +1,6 @@
-package com.apiabusedetection.exception;
-import com.apiabusedetection.user.dto.response.ApiResponse;
+package com.apiabusedetection.common.exception;
+
+import com.apiabusedetection.common.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,4 +1,4 @@
-package com.apiabusedetection.exception;
+package com.apiabusedetection.common.exception;
 
 public class AppException extends RuntimeException {
     public AppException(ErrorCode errorCode) {
