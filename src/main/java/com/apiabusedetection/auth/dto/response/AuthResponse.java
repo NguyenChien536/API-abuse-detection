@@ -1,4 +1,4 @@
-package com.apiabusedetection.auth.dto;
+package com.apiabusedetection.auth.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthRequest {
-    String username;
-    String password;
+public class AuthResponse {
+    String token;
+    boolean authenticated;
 }
