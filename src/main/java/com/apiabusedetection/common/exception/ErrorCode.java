@@ -13,7 +13,8 @@ public enum ErrorCode {
     ROLE_REQUIRED(1009, "Role is required"),
     USERNAME_REQUIRED(1010, "Username is required"),
     PASSWORD_REQUIRED(1011, "Password is required"),
-    UNAUTHENTICATED(1012, "Unauthenticated"),;
+    UNAUTHENTICATED(1012, "Unauthenticated"),
+    EMAIL_EXISTS(1013, "Email already exists");
 
     ErrorCode(int code, String message) {
         this.code = code;

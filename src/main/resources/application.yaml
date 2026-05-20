@@ -1,13 +1,10 @@
 server:
-  port: 8080
   servlet:
     context-path: /api-abuse-detection
 
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/api_abuse_detection?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Bangkok
-    username: root
-    password: chien2005
+  profiles:
+    default: local
 
   jpa:
     hibernate:
@@ -29,4 +26,3 @@ management:
   endpoint:
     health:
       show-details: always
-

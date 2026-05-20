@@ -12,6 +12,8 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "passwordHash", source = "password")
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     User toUser(UserCreationRequest request);
@@ -20,7 +22,8 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "passwordHash", source = "password")
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);

@@ -30,6 +30,5 @@ public class UserUpdateRequest {
     @Size(min = 8, max = 72, message = "INVALID_PASSWORD")
     String password;
 
-    @Builder.Default
-    boolean enabled = true;
+    Boolean enabled;
 }

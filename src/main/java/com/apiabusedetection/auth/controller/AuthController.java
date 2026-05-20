@@ -19,7 +19,7 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthController {
-    AuthService authService;
+    final AuthService authService;
     @PostMapping("/token")
     ApiResponse<AuthResponse> authenticate(@RequestBody AuthRequest request){
         var result = authService.authenticate(request);

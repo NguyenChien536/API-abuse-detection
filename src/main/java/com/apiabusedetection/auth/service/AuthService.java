@@ -6,13 +6,13 @@ import com.apiabusedetection.auth.dto.response.AuthResponse;
 import com.apiabusedetection.auth.dto.response.IntrospectResponse;
 import com.apiabusedetection.common.exception.AppException;
 import com.apiabusedetection.common.exception.ErrorCode;
+import com.apiabusedetection.user.entity.User;
 import com.apiabusedetection.user.repository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import io.micrometer.core.instrument.binder.logging.LogbackMetrics;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,11 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Slf4j
 @Service
@@ -36,7 +38,7 @@ public class AuthService {
 
     @NonFinal
     protected static final String SIGNER_KEY = "374ccce55ce533f7dcc8bc02b136d0b5963d0ed654f532313e1e49862fe68c11";
-    private final LogbackMetrics logbackMetrics;
+
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
@@ -65,24 +67,24 @@ public class AuthService {
         if(!authenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        var token = generateToken(request.getUsername());
+        var token = generateToken(user);
         return AuthResponse.builder()
                 .token(token)
                 .authenticated(true)
                 .build();
     }
 
-    private String generateToken(String username){
+    private String generateToken(User user){
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("apiabusedetection.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
-                .claim("customClaim", "Custom")
+                .claim("scope", buildScope(user))
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -96,5 +98,13 @@ public class AuthService {
             log.error("Cannot create token", e);
             throw new RuntimeException(e);
         }
+    }
+    //Function of building scope for token
+    private String buildScope(User user){
+        StringJoiner stringJoiner = new StringJoiner(" ");//ngăn cách bởi dấu cách theo convention
+        if(!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(stringJoiner::add);
+
+        return stringJoiner.toString();
     }
 }
