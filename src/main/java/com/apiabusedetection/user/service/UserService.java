@@ -13,6 +13,10 @@ import com.apiabusedetection.user.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +27,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
@@ -55,20 +60,31 @@ public class UserService {
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional(readOnly = true)
     public List<UserResponse> getUsers() {
+        log.info("In method getUsers");
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
     }
 
+    @PostAuthorize("returnObject.username == authentication.name")
     @Transactional(readOnly = true)
     public UserResponse getUser(Long id) {
+        log.info("In method get user by id");
         return userMapper.toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
+
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+        return userMapper.toUserResponse(user);
+    }
     @Transactional
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
@@ -96,4 +112,6 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
+
+
 }
