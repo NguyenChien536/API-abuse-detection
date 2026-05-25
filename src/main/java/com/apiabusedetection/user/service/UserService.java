@@ -69,12 +69,14 @@ public class UserService {
                 .toList();
     }
 
-    @PostAuthorize("returnObject.username == authentication.name")
+    @PostAuthorize("hasRole('ADMIN') or returnObject.username == authentication.name")
     @Transactional(readOnly = true)
     public UserResponse getUser(Long id) {
         log.info("In method get user by id");
-        return userMapper.toUserResponse(userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        return userMapper.toUserResponse(user);
     }
 
 
@@ -85,6 +87,8 @@ public class UserService {
         User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
         return userMapper.toUserResponse(user);
     }
+
+    @PreAuthorize("@userSecurity.isOwnerOrAdmin(#id)")
     @Transactional
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
@@ -105,6 +109,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
@@ -112,6 +117,4 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
-
-
 }

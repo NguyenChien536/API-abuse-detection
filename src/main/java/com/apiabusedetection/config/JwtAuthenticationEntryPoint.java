@@ -11,8 +11,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
-
-//401 Unauthorized vi 401 chỉ chạy ở tầng filter chứ chưa tới tầng GlobalExceptionHandler
+// Xử lý lỗi chưa đăng nhập, chưa có token
+//401 Unauthorized vi 401 xảy ra ở tầng Spring Security filter, chưa đi vào tầng GlobalExceptionHandler
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)

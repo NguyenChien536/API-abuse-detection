@@ -4,6 +4,7 @@ import com.apiabusedetection.auth.dto.request.AuthRequest;
 import com.apiabusedetection.auth.dto.request.IntrospectRequest;
 import com.apiabusedetection.auth.dto.response.AuthResponse;
 import com.apiabusedetection.auth.dto.response.IntrospectResponse;
+import com.apiabusedetection.config.JwtProperties;
 import com.apiabusedetection.common.exception.AppException;
 import com.apiabusedetection.common.exception.ErrorCode;
 import com.apiabusedetection.user.entity.User;
@@ -16,7 +17,6 @@ import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -35,15 +36,13 @@ import java.util.StringJoiner;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthService {
     final UserRepository userRepository;
-
-    @NonFinal
-    protected static final String SIGNER_KEY = "374ccce55ce533f7dcc8bc02b136d0b5963d0ed654f532313e1e49862fe68c11";
+    final JwtProperties jwtProperties;
 
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
 
-        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+        JWSVerifier verifier = new MACVerifier(jwtProperties.getSignerKey().getBytes(StandardCharsets.UTF_8));
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -92,7 +91,7 @@ public class AuthService {
         JWSObject  jwsObject = new JWSObject(header, payload);
 
         try {//ky
-            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            jwsObject.sign(new MACSigner(jwtProperties.getSignerKey().getBytes(StandardCharsets.UTF_8)));
             return jwsObject.serialize();
         } catch (JOSEException e) {
             log.error("Cannot create token", e);

@@ -15,4 +15,4 @@ app:
     email: admin@example.com
 
 jwt:
-  signerKey: "374ccce55ce533f7dcc8bc02b136d0b5963d0ed654f532313e1e49862fe68c11"
+  signerKey: ${JWT_SIGNER_KEY:374ccce55ce533f7dcc8bc02b136d0b5963d0ed654f532313e1e49862fe68c11}
