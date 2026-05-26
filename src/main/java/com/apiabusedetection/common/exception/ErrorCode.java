@@ -20,7 +20,8 @@ public enum ErrorCode {
     PASSWORD_REQUIRED(1011, "Password is required",HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1012, "Unauthenticated",HttpStatus.UNAUTHORIZED),
     EMAIL_EXISTS(1013, "Email already exists",HttpStatus.BAD_REQUEST),
-    UNAUTHORIZED(1014, "You do not have permission",HttpStatus.FORBIDDEN),;
+    UNAUTHORIZED(1014, "You do not have permission",HttpStatus.FORBIDDEN),
+    USER_DISABLED(1015, "User account is disabled", HttpStatus.FORBIDDEN),;
 
     ErrorCode(int code, String message, HttpStatusCode httpStatusCode) {
         this.code = code;
