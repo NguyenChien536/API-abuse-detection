@@ -1,11 +1,12 @@
 package com.apiabusedetection.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    @NotBlank(message = "USERNAME_REQUIRED")
+
     @Size(min = 3, max = 50, message = "USERNAME_INVALID")
     @Pattern(
             regexp = "^[a-zA-Z0-9._-]+$",
@@ -21,14 +22,16 @@ public class UserUpdateRequest {
     )
     String username;
 
-    @NotBlank(message = "BLANK_EMAIL")
+
     @Email(message = "INVALID_EMAIL")
     @Size(max = 100, message = "INVALID_EMAIL")
     String email;
 
-    @NotBlank(message = "PASSWORD_REQUIRED")
+
     @Size(min = 8, max = 72, message = "INVALID_PASSWORD")
     String password;
+
+    List<String> roles;
 
     Boolean enabled;
 }

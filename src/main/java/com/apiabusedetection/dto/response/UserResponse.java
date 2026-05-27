@@ -15,7 +15,7 @@ public class UserResponse {
     Long id;
     String username;
     String email;
-    Set<String> roles;
+    Set<RoleReponse> roles;
     @Builder.Default
     boolean enabled = true;
     LocalDateTime createdAt;

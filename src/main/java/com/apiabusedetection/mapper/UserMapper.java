@@ -5,9 +5,11 @@ import com.apiabusedetection.dto.request.UserUpdateRequest;
 import com.apiabusedetection.dto.response.UserResponse;
 import com.apiabusedetection.entity.Role;
 import com.apiabusedetection.entity.User;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -21,10 +23,10 @@ public interface UserMapper {
 
     UserResponse toUserResponse(User user);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "passwordHash", source = "password")
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "enabled", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);

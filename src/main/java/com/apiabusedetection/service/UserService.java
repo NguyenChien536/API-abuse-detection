@@ -81,7 +81,7 @@ public class UserService {
 
     @PostAuthorize("hasAuthority('user:read') or returnObject.username == authentication.name")
     @Transactional(readOnly = true)
-    public UserResponse getUser(Long id) {
+    public UserResponse getUserById(Long id) {
         log.info("In method get user by id");
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -104,18 +104,24 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        if (userRepository.existsByUsernameAndIdNot(request.getUsername(), id)) {
+        if (request.getUsername() != null && userRepository.existsByUsernameAndIdNot(request.getUsername(), id)) {
             throw new AppException(ErrorCode.USER_EXISTS);
         }
-        if (userRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
+        if (request.getEmail() != null && userRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
             throw new AppException(ErrorCode.EMAIL_EXISTS);
         }
 
         userMapper.updateUser(user, request);
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-        if (request.getEnabled() != null) {
-            user.setEnabled(request.getEnabled());
+
+        if (request.getPassword() != null) {
+            user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         }
+
+        if (request.getRoles() != null) {
+            var roles = roleRepository.findAllById(request.getRoles());
+            user.setRoles(new HashSet<>(roles));
+        }
+
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -128,4 +134,3 @@ public class UserService {
         userRepository.deleteById(id);
     }
 }
-

@@ -29,11 +29,11 @@ public class RoleService {
         role.setPermissions(new HashSet<>(permissions));
 
         role = rolerepository.save(role);
-       return rolemapper.roRoleResponse(role);
+       return rolemapper.toRoleResponse(role);
     }
     public List<RoleReponse> getRoles(){
         return rolerepository.findAll()
-                .stream().map(rolemapper::roRoleResponse)
+                .stream().map(rolemapper::toRoleResponse)
                 .toList();
     }
     public void deleteRole(String role){
