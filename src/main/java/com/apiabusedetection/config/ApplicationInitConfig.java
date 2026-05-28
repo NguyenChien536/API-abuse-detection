@@ -37,6 +37,7 @@ public class ApplicationInitConfig {
     @Value("${app.bootstrap-admin.email:admin@example.com}")
     String adminEmail;
 
+
     // chạy mỗi khi đc sạc lên
     @Bean
     @ConditionalOnProperty(prefix = "app.bootstrap-admin", name = "enabled", havingValue = "true")

@@ -2,6 +2,7 @@ package com.apiabusedetection.controller;
 
 import com.apiabusedetection.dto.request.AuthRequest;
 import com.apiabusedetection.dto.request.IntrospectRequest;
+import com.apiabusedetection.dto.request.LogoutRequest;
 import com.apiabusedetection.dto.response.AuthResponse;
 import com.apiabusedetection.dto.response.IntrospectResponse;
 import com.apiabusedetection.service.AuthService;
@@ -34,5 +35,10 @@ public class AuthController {
                 .result(result)
                 .build();
     }
-
+    @PostMapping("/logout")
+    ApiResponse<Void> logout (@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authService.logout(request);
+        return ApiResponse.<Void>builder()
+                .build();
+    }
 }
