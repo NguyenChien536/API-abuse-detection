@@ -29,7 +29,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     String[] PUBLIC_ENDPOINTS = {"/users",
-            "/auth/token", "/auth/introspect", "/auth/logout"};
+            "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"};
+
 
     @Autowired
     private CustomJwtDecoder customeJwtDecoder;

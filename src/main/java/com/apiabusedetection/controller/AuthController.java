@@ -3,6 +3,7 @@ package com.apiabusedetection.controller;
 import com.apiabusedetection.dto.request.AuthRequest;
 import com.apiabusedetection.dto.request.IntrospectRequest;
 import com.apiabusedetection.dto.request.LogoutRequest;
+import com.apiabusedetection.dto.request.RefreshRequest;
 import com.apiabusedetection.dto.response.AuthResponse;
 import com.apiabusedetection.dto.response.IntrospectResponse;
 import com.apiabusedetection.service.AuthService;
@@ -39,6 +40,13 @@ public class AuthController {
     ApiResponse<Void> logout (@RequestBody LogoutRequest request) throws ParseException, JOSEException {
         authService.logout(request);
         return ApiResponse.<Void>builder()
+                .build();
+    }
+    @PostMapping("/refresh")
+    ApiResponse<AuthResponse> authenticate(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
+        var result = authService.refreshToken(request);
+        return ApiResponse.<AuthResponse>builder()
+                .result(result)
                 .build();
     }
 }
